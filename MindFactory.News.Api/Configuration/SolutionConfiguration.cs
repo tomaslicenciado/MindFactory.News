@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using MindFactory.News.Api.Configuration.SwaggerConfiguration;
 using MindFactory.News.Api.Extensions;
+using MindFactory.News.Application.Interfaces;
+using MindFactory.News.Infraestructure.Persistence;
 
 namespace MindFactory.News.Api.Configuration
 {
@@ -65,6 +68,16 @@ namespace MindFactory.News.Api.Configuration
         public static WebApplicationBuilder ConfigureServices(this WebApplicationBuilder builder)
         {
             builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly()));
+            builder.Services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"),
+                npgsqlOptions =>
+                {
+                    npgsqlOptions.MigrationsHistoryTable("__EFMigrationsHistory", "admin");
+                }));
+
+            builder.Services.AddScoped<IApplicationDbContext>(provider =>
+                provider.GetRequiredService<ApplicationDbContext>());
+            
 
             return builder;
         }
