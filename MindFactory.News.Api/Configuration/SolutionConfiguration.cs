@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using MindFactory.News.Api.Configuration.SwaggerConfiguration;
 using MindFactory.News.Api.Extensions;
+using MindFactory.News.Application.Authors.Commands.AddAuthor;
 using MindFactory.News.Application.Interfaces;
 using MindFactory.News.Infraestructure.Persistence;
 
@@ -68,6 +69,13 @@ namespace MindFactory.News.Api.Configuration
         public static WebApplicationBuilder ConfigureServices(this WebApplicationBuilder builder)
         {
             builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly()));
+            builder.Services.AddMediatR(cfg =>
+            {
+                cfg.RegisterServicesFromAssemblies([
+                    typeof(Program).Assembly, typeof(AddAuthorCommandHandler).Assembly
+                ]);
+            });
+
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"),
                 npgsqlOptions =>
