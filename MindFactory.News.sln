@@ -1,0 +1,58 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MindFactory.News.Api", "MindFactory.News.Api\MindFactory.News.Api.csproj", "{0AC72795-2AA2-449D-9404-E3373B6AFE5D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MindFactory.News.Application", "MindFactory.News.Application\MindFactory.News.Application.csproj", "{252DC4B3-EC35-4D73-BA8F-5F83897298F8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MindFactory.News.Domain", "MindFactory.News.Domain\MindFactory.News.Domain.csproj", "{57962B71-FECE-4DFB-A29D-1163519DF463}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MindFactory.News.Infraestructure", "MindFactory.News.Infraestructure\MindFactory.News.Infraestructure.csproj", "{24AE73EF-C935-464C-8EEB-151AF7BF08EC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MindFactory.News.Tests", "MindFactory.News.Tests", "{C06DC059-43DF-4315-BA08-B87FE47BD18E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MindFactory.News.Api.Tests", "MindFactory.News.Tests\MindFactory.News.Api.Tests\MindFactory.News.Api.Tests.csproj", "{B0DA64D2-69D8-40D1-A424-818BDB15518C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MindFactory.News.Application.Tests", "MindFactory.News.Tests\MindFactory.News.Application.Tests\MindFactory.News.Application.Tests.csproj", "{B8461DA5-B832-4255-882D-B0CDD217E61C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0AC72795-2AA2-449D-9404-E3373B6AFE5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0AC72795-2AA2-449D-9404-E3373B6AFE5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0AC72795-2AA2-449D-9404-E3373B6AFE5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0AC72795-2AA2-449D-9404-E3373B6AFE5D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{252DC4B3-EC35-4D73-BA8F-5F83897298F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{252DC4B3-EC35-4D73-BA8F-5F83897298F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{252DC4B3-EC35-4D73-BA8F-5F83897298F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{252DC4B3-EC35-4D73-BA8F-5F83897298F8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{57962B71-FECE-4DFB-A29D-1163519DF463}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57962B71-FECE-4DFB-A29D-1163519DF463}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57962B71-FECE-4DFB-A29D-1163519DF463}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57962B71-FECE-4DFB-A29D-1163519DF463}.Release|Any CPU.Build.0 = Release|Any CPU
+		{24AE73EF-C935-464C-8EEB-151AF7BF08EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{24AE73EF-C935-464C-8EEB-151AF7BF08EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{24AE73EF-C935-464C-8EEB-151AF7BF08EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{24AE73EF-C935-464C-8EEB-151AF7BF08EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B0DA64D2-69D8-40D1-A424-818BDB15518C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B0DA64D2-69D8-40D1-A424-818BDB15518C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B0DA64D2-69D8-40D1-A424-818BDB15518C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B0DA64D2-69D8-40D1-A424-818BDB15518C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B8461DA5-B832-4255-882D-B0CDD217E61C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8461DA5-B832-4255-882D-B0CDD217E61C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8461DA5-B832-4255-882D-B0CDD217E61C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8461DA5-B832-4255-882D-B0CDD217E61C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{B0DA64D2-69D8-40D1-A424-818BDB15518C} = {C06DC059-43DF-4315-BA08-B87FE47BD18E}
+		{B8461DA5-B832-4255-882D-B0CDD217E61C} = {C06DC059-43DF-4315-BA08-B87FE47BD18E}
+	EndGlobalSection
+EndGlobal

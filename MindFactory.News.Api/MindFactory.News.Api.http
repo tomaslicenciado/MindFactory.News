@@ -1,0 +1,6 @@
+@MindFactory.News.Api_HostAddress = http://localhost:5194
+
+GET {{MindFactory.News.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
