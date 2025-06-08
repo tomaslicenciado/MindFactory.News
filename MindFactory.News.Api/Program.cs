@@ -1,42 +1,61 @@
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using MindFactory.News.Api.Configuration;
+using MindFactory.News.Api.Configuration.SwaggerConfiguration;
+using MindFactory.News.Api.Extensions;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.ConfigureSolucion();
+
+var basepath = builder.Environment.EnvironmentName.Equals("AZ-DEV") ? "/ticket" : String.Empty;
+
+builder.Services.AddSwaggerGen(c =>
+{
+    if (!String.IsNullOrEmpty(basepath))
+        c.DocumentFilter<SwaggerDocumentFilter>();
+});
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+app.UseSwagger();
+
+var provider = app.Services.GetService<IApiVersionDescriptionProvider>();
+app.UseSwaggerUI(
+    options =>
+    {
+        // build a swagger endpoint for each discovered API version
+        foreach (var description in provider.ApiVersionDescriptions)
+        {
+            options.SwaggerEndpoint($"{basepath}/swagger/{description.GroupName}/swagger.json",
+                description.GroupName.ToUpperInvariant());
+        }
+    });
+
+app.UseHttpsRedirection();
+
+app.UseRouting();
+
+//autenticacion
+app.UseAuthentication();
+app.UseAuthorization();
+
+
+if (builder.Configuration.IsCORSEnabled())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseCors();
 }
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
-app.MapGet("/weatherforecast", () =>
+app.UseEndpoints(endpoints =>
 {
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast")
-.WithOpenApi();
+    endpoints.MapHealthChecks("/health", new HealthCheckOptions()
+    {
+        // This custom writer formats the detailed status as JSON.
+        //ResponseWriter = Sgrtch.Gser.Tickets.Api.Health.HealthResponsesWriter.WriteResponses
+    });
+    endpoints.MapControllers();
+});
 
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
