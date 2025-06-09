@@ -23,8 +23,7 @@ namespace MindFactory.News.Application.NewsItems.Queries.GetNews
         {
             try
             {
-                return await GetBasicQuery()
-                    .Bind(x => ApplyFilters(x, request))
+                return await GetQuery(request)
                     .Bind(x => RetrieveNewsAsync(x, cancellationToken));
             }
             catch (Exception e)
@@ -33,23 +32,24 @@ namespace MindFactory.News.Application.NewsItems.Queries.GetNews
             }
         }
 
-        private Result<IQueryable<NewsItem>> GetBasicQuery()
+        private Result<IQueryable<NewsItem>> GetQuery(GetNewsQuery request)
         {
-            return Result.Success(_context.NewsItems.AsNoTracking()
-                .Where(x => x.Enabled));
-        }
+            var itemsSet = _context.NewsItems;
 
-        private Result<IQueryable<NewsItem>> ApplyFilters(IQueryable<NewsItem> query, GetNewsQuery request)
-        {
+            var query = itemsSet.AsNoTracking();
+
+            if (request.TitleOrAuthor != null)
+                query = itemsSet
+                   .FromSqlInterpolated($@"
+                        SELECT * FROM ""NewsItems""
+                        WHERE ""SearchVector"" @@ plainto_tsquery('spanish', {request.TitleOrAuthor})")
+                    .AsNoTracking();
+
             if (request.PublishDate.HasValue)
                 query = query.Where(x => x.PublishDate == request.PublishDate.Value);
 
-            if (request.TitleOrAuthor != null)
-                query = query.Where(x =>
-                        EF.Functions.ToTsVector("spanish", EF.Property<string>(x, "Title") + " " + x.Author.Name)
-                            .Matches(EF.Functions.PlainToTsQuery("spanish", request.TitleOrAuthor)));
-
-            return Result.Success(query);
+            return Result.Success(_context.NewsItems.AsNoTracking()
+                .Where(x => x.Enabled));
         }
 
         private async Task<Result<GetNewsResponse>> RetrieveNewsAsync(IQueryable<NewsItem> query, CancellationToken cancellationToken)
