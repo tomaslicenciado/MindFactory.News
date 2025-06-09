@@ -1,13 +1,14 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using CSharpFunctionalExtensions;
-using MediatR;
-using MindFactory.News.Application.Common.Responses;
+// <copyright file="AddNewsCommand.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
 namespace MindFactory.News.Application.NewsItems.Commands.AddNews
 {
+    using System;
+    using CSharpFunctionalExtensions;
+    using MediatR;
+    using MindFactory.News.Application.Common.Responses;
+
     public class AddNewsCommand : IRequest<Result<SingleResponse>>
     {
         public string Title { get; set; }
@@ -28,7 +29,7 @@ namespace MindFactory.News.Application.NewsItems.Commands.AddNews
                 Body = request.Body,
                 ImageUrl = request.ImageUrl,
                 PublishDate = request.PublishDate,
-                AuthorId = request.AuthorId!.Value
+                AuthorId = request.AuthorId!.Value,
             };
         }
     }

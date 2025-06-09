@@ -1,18 +1,22 @@
-using CSharpFunctionalExtensions;
-using MediatR;
-using MindFactory.News.Application.Common.Responses;
-using MindFactory.News.Application.Interfaces;
-using MindFactory.News.Domain.Entities;
+// <copyright file="AddAuthorCommandHandler.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
 namespace MindFactory.News.Application.Authors.Commands.AddAuthor
 {
+    using CSharpFunctionalExtensions;
+    using MediatR;
+    using MindFactory.News.Application.Common.Responses;
+    using MindFactory.News.Application.Interfaces;
+    using MindFactory.News.Domain.Entities;
+
     public class AddAuthorCommandHandler : IRequestHandler<AddAuthorCommand, Result<SingleResponse>>
     {
-        private readonly IApplicationDbContext _context;
+        private readonly IApplicationDbContext context;
 
         public AddAuthorCommandHandler(IApplicationDbContext context)
         {
-            _context = context;
+            this.context = context;
         }
 
         public async Task<Result<SingleResponse>> Handle(AddAuthorCommand request, CancellationToken cancellationToken)
@@ -29,7 +33,7 @@ namespace MindFactory.News.Application.Authors.Commands.AddAuthor
             }
         }
 
-        private Result ValidateRequest(AddAuthorCommand request)
+        private static Result ValidateRequest(AddAuthorCommand request)
         {
             if (string.IsNullOrWhiteSpace(request.Name))
             {
@@ -41,16 +45,16 @@ namespace MindFactory.News.Application.Authors.Commands.AddAuthor
 
         private async Task<Result<SingleResponse>> SaveAuthor(AddAuthorCommand request, CancellationToken cancellationToken)
         {
-            _context.Authors.Add(new Author
+            context.Authors.Add(new Author
                 {
-                    Name = request.Name
+                    Name = request.Name,
                 });
-                
-            await _context.SaveChangesAsync(cancellationToken);
+
+            await context.SaveChangesAsync(cancellationToken);
 
             return Result.Success(new SingleResponse
             {
-                Message = "Author added successfully."
+                Message = "Author added successfully.",
             });
         }
     }

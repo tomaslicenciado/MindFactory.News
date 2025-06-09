@@ -1,10 +1,14 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
-using NpgsqlTypes;
+﻿// <copyright file="20250609014204_search_vector.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
 #nullable disable
 
 namespace MindFactory.News.Infraestructure.Migrations
 {
+    using Microsoft.EntityFrameworkCore.Migrations;
+    using NpgsqlTypes;
+
     /// <inheritdoc />
     public partial class search_vector : Migration
     {

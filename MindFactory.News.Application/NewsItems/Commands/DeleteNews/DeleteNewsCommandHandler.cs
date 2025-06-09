@@ -1,19 +1,23 @@
-using CSharpFunctionalExtensions;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
-using MindFactory.News.Application.Common.Responses;
-using MindFactory.News.Application.Interfaces;
-using MindFactory.News.Domain.Entities;
+// <copyright file="DeleteNewsCommandHandler.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
 namespace MindFactory.News.Application.NewsItems.Commands.DeleteNews
 {
+    using CSharpFunctionalExtensions;
+    using MediatR;
+    using Microsoft.EntityFrameworkCore;
+    using MindFactory.News.Application.Common.Responses;
+    using MindFactory.News.Application.Interfaces;
+    using MindFactory.News.Domain.Entities;
+
     public class DeleteNewsCommandHandler : IRequestHandler<DeleteNewsCommand, Result<SingleResponse>>
     {
-        private readonly IApplicationDbContext _context;
+        private readonly IApplicationDbContext context;
 
         public DeleteNewsCommandHandler(IApplicationDbContext context)
         {
-            _context = context;
+            this.context = context;
         }
 
         public async Task<Result<SingleResponse>> Handle(DeleteNewsCommand request, CancellationToken cancellationToken)
@@ -31,11 +35,13 @@ namespace MindFactory.News.Application.NewsItems.Commands.DeleteNews
 
         private async Task<Result<NewsItem>> GetNews(DeleteNewsCommand request, CancellationToken cancellationToken)
         {
-            var news = await _context.NewsItems
+            var news = await context.NewsItems
                 .SingleOrDefaultAsync(x => x.Id == request.Id && x.Enabled, cancellationToken);
 
             if (news == null)
+            {
                 return Result.Failure<NewsItem>("News not found");
+            }
 
             return Result.Success(news);
         }
@@ -45,9 +51,9 @@ namespace MindFactory.News.Application.NewsItems.Commands.DeleteNews
             news.Enabled = false;
             news.UpdatedDateTime = DateTime.UtcNow;
 
-            _context.NewsItems.Update(news);
+            context.NewsItems.Update(news);
 
-            await _context.SaveChangesAsync(cancellationToken);
+            await context.SaveChangesAsync(cancellationToken);
 
             return Result.Success(new SingleResponse() {Message = "News successfully deleted"});
         }

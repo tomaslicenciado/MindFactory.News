@@ -1,19 +1,27 @@
-using Microsoft.EntityFrameworkCore;
-using MindFactory.News.Application.Interfaces;
-using MindFactory.News.Domain.Entities;
+// <copyright file="ApplicationDbContext.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
 namespace MindFactory.News.Infraestructure.Persistence
 {
+    using Microsoft.EntityFrameworkCore;
+    using MindFactory.News.Application.Interfaces;
+    using MindFactory.News.Domain.Entities;
+
     public class ApplicationDbContext : DbContext, IApplicationDbContext
     {
         public ApplicationDbContext() { }
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options) { }
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
             => base.SaveChangesAsync(cancellationToken);
+
         public virtual DbSet<NewsItem> NewsItems { get; set; }
+
         public virtual DbSet<Author> Authors { get; set; }
+
         public virtual DbSet<Editorial> Editorials { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

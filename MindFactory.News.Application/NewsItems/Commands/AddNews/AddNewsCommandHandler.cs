@@ -1,23 +1,25 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using CSharpFunctionalExtensions;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
-using MindFactory.News.Application.Common.Responses;
-using MindFactory.News.Application.Interfaces;
-using MindFactory.News.Domain.Entities;
+// <copyright file="AddNewsCommandHandler.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
 namespace MindFactory.News.Application.NewsItems.Commands.AddNews
 {
+    using System;
+    using System.Threading.Tasks;
+    using CSharpFunctionalExtensions;
+    using MediatR;
+    using Microsoft.EntityFrameworkCore;
+    using MindFactory.News.Application.Common.Responses;
+    using MindFactory.News.Application.Interfaces;
+    using MindFactory.News.Domain.Entities;
+
     public class AddNewsCommandHandler : IRequestHandler<AddNewsCommand, Result<SingleResponse>>
     {
-        private readonly IApplicationDbContext _context;
+        private readonly IApplicationDbContext context;
 
         public AddNewsCommandHandler(IApplicationDbContext context)
         {
-            _context = context;
+            this.context = context;
         }
 
         public async Task<Result<SingleResponse>> Handle(AddNewsCommand request, CancellationToken cancellationToken)
@@ -36,29 +38,35 @@ namespace MindFactory.News.Application.NewsItems.Commands.AddNews
         private async Task<Result> ValidateRequest(AddNewsCommand request, CancellationToken cancellationToken)
         {
             if (string.IsNullOrWhiteSpace(request.Title))
+            {
                 return Result.Failure("Title must not be empty");
+            }
 
             if (string.IsNullOrWhiteSpace(request.Body))
+            {
                 return Result.Failure("Body must not be empty");
+            }
 
-            if (!await _context.Authors.AnyAsync(x => x.Id == request.AuthorId))
+            if (!await context.Authors.AnyAsync(x => x.Id == request.AuthorId, cancellationToken))
+            {
                 return Result.Failure("Author not found");
+            }
 
             return Result.Success();
         }
 
         private async Task<Result<SingleResponse>> SaveNewsAsync(AddNewsCommand request, CancellationToken cancellationToken)
         {
-            _context.NewsItems.Add(new NewsItem()
+            context.NewsItems.Add(new NewsItem()
             {
                 Title = request.Title,
                 Body = request.Body,
                 PublishDate = request.PublishDate,
                 ImageUrl = request.ImageUrl,
-                AuthorId = request.AuthorId
+                AuthorId = request.AuthorId,
             });
 
-            await _context.SaveChangesAsync(cancellationToken);
+            await context.SaveChangesAsync(cancellationToken);
 
             return Result.Success(new SingleResponse() { Message = "News successfully created" });
         }

@@ -1,22 +1,29 @@
-
-using System.Globalization;
-using System.Text;
-using CSharpFunctionalExtensions;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
-using MindFactory.News.Application.Interfaces;
-using MindFactory.News.Domain.Entities;
-using NpgsqlTypes;
+// <copyright file="GetNewsQueryHandler.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
 namespace MindFactory.News.Application.NewsItems.Queries.GetNews
 {
+    using System.Globalization;
+    using System.Text;
+    using CSharpFunctionalExtensions;
+    using MediatR;
+    using Microsoft.EntityFrameworkCore;
+    using MindFactory.News.Application.Interfaces;
+    using MindFactory.News.Domain.Entities;
+    using NpgsqlTypes;
+
     public class GetNewsQueryHandler : IRequestHandler<GetNewsQuery, Result<GetNewsResponse>>
     {
-        private readonly IApplicationDbContext _context;
+        private readonly IApplicationDbContext context;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GetNewsQueryHandler"/> class.
+        /// </summary>
+        /// <param name="context">Database Context.</param>
         public GetNewsQueryHandler(IApplicationDbContext context)
         {
-            _context = context;
+            this.context = context;
         }
 
         public async Task<Result<GetNewsResponse>> Handle(GetNewsQuery request, CancellationToken cancellationToken)
@@ -34,21 +41,25 @@ namespace MindFactory.News.Application.NewsItems.Queries.GetNews
 
         private Result<IQueryable<NewsItem>> GetQuery(GetNewsQuery request)
         {
-            var itemsSet = _context.NewsItems;
+            var itemsSet = context.NewsItems;
 
             var query = itemsSet.AsNoTracking();
 
             if (request.TitleOrAuthor != null)
+            {
                 query = itemsSet
                    .FromSqlInterpolated($@"
                         SELECT * FROM ""NewsItems""
                         WHERE ""SearchVector"" @@ plainto_tsquery('spanish', {request.TitleOrAuthor})")
                     .AsNoTracking();
+            }
 
             if (request.PublishDate.HasValue)
+            {
                 query = query.Where(x => x.PublishDate == request.PublishDate.Value);
+            }
 
-            return Result.Success(_context.NewsItems.AsNoTracking()
+            return Result.Success(context.NewsItems.AsNoTracking()
                 .Where(x => x.Enabled));
         }
 
@@ -60,13 +71,13 @@ namespace MindFactory.News.Application.NewsItems.Queries.GetNews
                     Id = x.Id,
                     Title = x.Title,
                     ImageUrl = x.ImageUrl,
-                    AuthorName = x.Author.Name
+                    AuthorName = x.Author.Name,
                 })
                 .ToListAsync(cancellationToken);
 
             return Result.Success(new GetNewsResponse()
             {
-                News = news
+                News = news,
             });
         }
 
@@ -76,7 +87,6 @@ namespace MindFactory.News.Application.NewsItems.Queries.GetNews
             return strings.All(s => RemoveDiacritics(stringBase.ToLower())
                 .Contains(RemoveDiacritics(s.ToLower())));
         }
-        
 
         private static string RemoveDiacritics(string text)
         {

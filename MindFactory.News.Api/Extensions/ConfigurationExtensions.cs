@@ -1,7 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+// <copyright file="ConfigurationExtensions.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
 namespace MindFactory.News.Api.Extensions
 {
@@ -10,14 +9,14 @@ namespace MindFactory.News.Api.Extensions
         public static bool IsCORSEnabled(this IConfiguration configuration)
         {
             var corsSection = configuration.GetSection("EnableCORS");
-            bool.TryParse(corsSection.Value, out var corsValue);
+            _ = bool.TryParse(corsSection.Value, out var corsValue);
             return corsValue;
         }
 
         public static bool IsSecurityEnabled(this IConfiguration configuration)
         {
             var sectionValue = configuration.GetSection("EnableSecurity");
-            bool.TryParse(sectionValue.Value, out var boolValue);
+            _ = bool.TryParse(sectionValue.Value, out var boolValue);
             return boolValue;
         }
     }

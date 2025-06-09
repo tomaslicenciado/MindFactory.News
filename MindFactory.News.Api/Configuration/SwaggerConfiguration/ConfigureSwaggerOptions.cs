@@ -1,23 +1,22 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.ApiExplorer;
-using Microsoft.Extensions.Options;
-using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.SwaggerGen;
+// <copyright file="ConfigureSwaggerOptions.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
 namespace MindFactory.News.Api.Configuration.SwaggerConfiguration
 {
-    public class ConfigureSwaggerOptions : IConfigureOptions<SwaggerGenOptions>
-    {
-        readonly IApiVersionDescriptionProvider provider;
+    using Microsoft.AspNetCore.Mvc.ApiExplorer;
+    using Microsoft.Extensions.Options;
+    using Microsoft.OpenApi.Models;
+    using Swashbuckle.AspNetCore.SwaggerGen;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ConfigureSwaggerOptions"/> class.
-        /// </summary>
-        /// <param name="provider">The <see cref="IApiVersionDescriptionProvider">provider</see> used to generate Swagger documents.</param>
-        public ConfigureSwaggerOptions(IApiVersionDescriptionProvider provider) => this.provider = provider;
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ConfigureSwaggerOptions"/> class.
+    /// </summary>
+    /// <param name="provider">The <see cref="IApiVersionDescriptionProvider">provider</see> used to generate Swagger documents.</param>
+    public class ConfigureSwaggerOptions(IApiVersionDescriptionProvider provider) : IConfigureOptions<SwaggerGenOptions>
+    {
+        private readonly IApiVersionDescriptionProvider provider = provider;
+
         /// <inheritdoc />
         public void Configure(SwaggerGenOptions options)
         {
@@ -31,21 +30,27 @@ namespace MindFactory.News.Api.Configuration.SwaggerConfiguration
                 }
                 catch (Exception)
                 {
+                    throw;
                 }
             }
         }
+
         public static OpenApiInfo CreateInfoForApiVersion(ApiVersionDescription description)
         {
+            ArgumentNullException.ThrowIfNull(description);
+
             var info = new OpenApiInfo()
             {
                 Title = "4Kings.POS.Api",
                 Version = description.ApiVersion.ToString(),
-                Description = "Api para la gestión de operaciones para POS"
+                Description = "Api para la gestión de operaciones para POS",
             };
+
             if (description.IsDeprecated)
             {
                 info.Description += " This API version has been deprecated.";
             }
+
             return info;
         }
     }

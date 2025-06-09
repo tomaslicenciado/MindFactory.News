@@ -1,19 +1,23 @@
-using CSharpFunctionalExtensions;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
-using MindFactory.News.Application.Common.Responses;
-using MindFactory.News.Application.Interfaces;
-using MindFactory.News.Domain.Entities;
+// <copyright file="UpdateAuthorCommandHandler.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
 namespace MindFactory.News.Application.Authors.Commands.UpdateAuthor
 {
+    using CSharpFunctionalExtensions;
+    using MediatR;
+    using Microsoft.EntityFrameworkCore;
+    using MindFactory.News.Application.Common.Responses;
+    using MindFactory.News.Application.Interfaces;
+    using MindFactory.News.Domain.Entities;
+
     public class UpdateAuthorCommandHandler : IRequestHandler<UpdateAuthorCommand, Result<SingleResponse>>
     {
-        private readonly IApplicationDbContext _context;
+        private readonly IApplicationDbContext context;
 
         public UpdateAuthorCommandHandler(IApplicationDbContext context)
         {
-            _context = context;
+            this.context = context;
         }
 
         public async Task<Result<SingleResponse>> Handle(UpdateAuthorCommand request, CancellationToken cancellationToken)
@@ -35,7 +39,7 @@ namespace MindFactory.News.Application.Authors.Commands.UpdateAuthor
 
         private async Task<Result<Author>> GetAuthor(UpdateAuthorCommand request, CancellationToken cancellationToken)
         {
-            var author = await _context.Authors
+            var author = await context.Authors
                 .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
             if (author == null)
@@ -64,9 +68,9 @@ namespace MindFactory.News.Application.Authors.Commands.UpdateAuthor
             author.Name = request.Name;
             author.UpdatedDateTime = DateTime.UtcNow;
 
-            _context.Authors.Update(author);
+            context.Authors.Update(author);
 
-            await _context.SaveChangesAsync(cancellationToken);
+            await context.SaveChangesAsync(cancellationToken);
 
             return Result.Success(new SingleResponse { Message = "Author updated successfully." });
         }

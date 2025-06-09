@@ -1,11 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+// <copyright file="AddNewsRequest.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
 namespace MindFactory.News.Application.NewsItems.Commands.AddNews
 {
+    using System;
+    using System.ComponentModel.DataAnnotations;
+
     public class AddNewsRequest
     {
         public string Title { get; set; }

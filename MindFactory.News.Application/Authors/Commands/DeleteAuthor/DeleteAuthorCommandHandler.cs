@@ -1,23 +1,25 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using CSharpFunctionalExtensions;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
-using MindFactory.News.Application.Common.Responses;
-using MindFactory.News.Application.Interfaces;
-using MindFactory.News.Domain.Entities;
+// <copyright file="DeleteAuthorCommandHandler.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
 namespace MindFactory.News.Application.Authors.Commands.DeleteAuthor
 {
+    using System;
+    using System.Threading.Tasks;
+    using CSharpFunctionalExtensions;
+    using MediatR;
+    using Microsoft.EntityFrameworkCore;
+    using MindFactory.News.Application.Common.Responses;
+    using MindFactory.News.Application.Interfaces;
+    using MindFactory.News.Domain.Entities;
+
     public class DeleteAuthorCommandHandler : IRequestHandler<DeleteAuthorCommand, Result<SingleResponse>>
     {
-        private readonly IApplicationDbContext _context;
+        private readonly IApplicationDbContext context;
 
         public DeleteAuthorCommandHandler(IApplicationDbContext context)
         {
-            _context = context;
+            this.context = context;
         }
 
         public async Task<Result<SingleResponse>> Handle(DeleteAuthorCommand request, CancellationToken cancellationToken)
@@ -36,7 +38,7 @@ namespace MindFactory.News.Application.Authors.Commands.DeleteAuthor
 
         private async Task<Result<Author>> GetAuthor(DeleteAuthorCommand request, CancellationToken cancellationToken)
         {
-            var author = await _context.Authors
+            var author = await context.Authors
                 .SingleOrDefaultAsync(x => x.Id == request.Id && x.Enabled, cancellationToken);
 
             if (author == null)
@@ -52,13 +54,13 @@ namespace MindFactory.News.Application.Authors.Commands.DeleteAuthor
             author.Enabled = false;
             author.UpdatedDateTime = DateTime.UtcNow;
 
-            _context.Authors.Update(author);
+            context.Authors.Update(author);
 
-            await _context.SaveChangesAsync(cancellationToken);
+            await context.SaveChangesAsync(cancellationToken);
 
             return Result.Success(new SingleResponse
             {
-                Message = "Author deleted successfully."
+                Message = "Author deleted successfully.",
             });
         }
     }
