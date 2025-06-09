@@ -1,16 +1,17 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using MindFactory.News.Api.Configuration.SwaggerConfiguration;
-using MindFactory.News.Api.Extensions;
-using MindFactory.News.Application.Interfaces;
-using MindFactory.News.Infraestructure.Persistence;
+// <copyright file="SolutionConfiguration.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
 namespace MindFactory.News.Api.Configuration
 {
+    using System.Reflection;
+    using Microsoft.EntityFrameworkCore;
+    using MindFactory.News.Api.Configuration.SwaggerConfiguration;
+    using MindFactory.News.Api.Extensions;
+    using MindFactory.News.Application.Authors.Commands.AddAuthor;
+    using MindFactory.News.Application.Interfaces;
+    using MindFactory.News.Infraestructure.Persistence;
+
     public static class SolutionConfiguration
     {
         public static void ConfigureSolucion(this WebApplicationBuilder builer)
@@ -23,7 +24,6 @@ namespace MindFactory.News.Api.Configuration
                 .ConfigureHealth()
                 .ConfigureCORS()
                 .ConfigureSecurity();
-
         }
 
         private static WebApplicationBuilder ConfigureSetting(this WebApplicationBuilder builder)
@@ -39,7 +39,9 @@ namespace MindFactory.News.Api.Configuration
             {
                 configurationBuilder
                     .SetBasePath(builder.Environment.ContentRootPath)
-                    .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: false,
+                    .AddJsonFile(
+                        $"appsettings.{builder.Environment.EnvironmentName}.json",
+                        optional: false,
                         reloadOnChange: true);
             }
 
@@ -68,16 +70,23 @@ namespace MindFactory.News.Api.Configuration
         public static WebApplicationBuilder ConfigureServices(this WebApplicationBuilder builder)
         {
             builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly()));
+            builder.Services.AddMediatR(cfg =>
+            {
+                cfg.RegisterServicesFromAssemblies([
+                    typeof(Program).Assembly, typeof(AddAuthorCommandHandler).Assembly
+                ]);
+            });
+
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"),
-                npgsqlOptions =>
-                {
-                    npgsqlOptions.MigrationsHistoryTable("__EFMigrationsHistory", "admin");
-                }));
+                options.UseNpgsql(
+                    builder.Configuration.GetConnectionString("DefaultConnection"),
+                    npgsqlOptions =>
+                    {
+                        npgsqlOptions.MigrationsHistoryTable("__EFMigrationsHistory", "admin");
+                    }));
 
             builder.Services.AddScoped<IApplicationDbContext>(provider =>
                 provider.GetRequiredService<ApplicationDbContext>());
-            
 
             return builder;
         }

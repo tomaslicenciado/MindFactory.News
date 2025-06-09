@@ -1,11 +1,15 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+﻿// <copyright file="20250608192059_create_entities.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
 #nullable disable
 
 namespace MindFactory.News.Infraestructure.Migrations
 {
+    using System;
+    using Microsoft.EntityFrameworkCore.Migrations;
+    using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+
     /// <inheritdoc />
     public partial class create_entities : Migration
     {
@@ -21,7 +25,7 @@ namespace MindFactory.News.Infraestructure.Migrations
                 columns: table => new
                 {
                     MigrationId = table.Column<string>(nullable: false),
-                    ProductVersion = table.Column<string>(nullable: false)
+                    ProductVersion = table.Column<string>(nullable: false),
                 },
                 constraints: table =>
                 {
@@ -43,7 +47,7 @@ namespace MindFactory.News.Infraestructure.Migrations
                     CreatedDateTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValueSql: "(now())::timestamp without time zone"),
                     UpdatedUserId = table.Column<int>(type: "integer", nullable: true),
                     UpdatedDateTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
-                    Enabled = table.Column<bool>(type: "boolean", nullable: false)
+                    Enabled = table.Column<bool>(type: "boolean", nullable: false),
                 },
                 constraints: table =>
                 {
@@ -64,7 +68,7 @@ namespace MindFactory.News.Infraestructure.Migrations
                     CreatedDateTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValueSql: "(now())::timestamp without time zone"),
                     UpdatedUserId = table.Column<int>(type: "integer", nullable: true),
                     UpdatedDateTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
-                    Enabled = table.Column<bool>(type: "boolean", nullable: false)
+                    Enabled = table.Column<bool>(type: "boolean", nullable: false),
                 },
                 constraints: table =>
                 {
@@ -88,7 +92,7 @@ namespace MindFactory.News.Infraestructure.Migrations
                     CreatedDateTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValueSql: "(now())::timestamp without time zone"),
                     UpdatedUserId = table.Column<int>(type: "integer", nullable: true),
                     UpdatedDateTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
-                    Enabled = table.Column<bool>(type: "boolean", nullable: false)
+                    Enabled = table.Column<bool>(type: "boolean", nullable: false),
                 },
                 constraints: table =>
                 {

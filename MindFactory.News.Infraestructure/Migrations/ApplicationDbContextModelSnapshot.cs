@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MindFactory.News.Infraestructure.Persistence;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+using NpgsqlTypes;
 
 #nullable disable
 
@@ -139,6 +140,9 @@ namespace MindFactory.News.Infraestructure.Migrations
                     b.Property<DateOnly>("PublishDate")
                         .HasColumnType("date");
 
+                    b.Property<NpgsqlTsVector>("SearchVector")
+                        .HasColumnType("tsvector");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("text");
@@ -155,6 +159,10 @@ namespace MindFactory.News.Infraestructure.Migrations
                     b.HasIndex("AuthorId");
 
                     b.HasIndex("EditorialId");
+
+                    b.HasIndex("SearchVector");
+
+                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("SearchVector"), "GIN");
 
                     b.ToTable("NewsItems", "news");
                 });

@@ -1,13 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.ApiExplorer;
-using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.SwaggerGen;
+// <copyright file="SwaggerDefaultValues.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
 namespace MindFactory.News.Api.Configuration.SwaggerConfiguration
 {
+    using Microsoft.AspNetCore.Mvc.ApiExplorer;
+    using Microsoft.OpenApi.Models;
+    using Swashbuckle.AspNetCore.SwaggerGen;
+
     public class SwaggerDefaultValues : IOperationFilter
     {
         /// <summary>
@@ -27,10 +27,8 @@ namespace MindFactory.News.Api.Configuration.SwaggerConfiguration
             foreach (var parameter in operation.Parameters)
             {
                 var description = apiDescription.ParameterDescriptions.First(p => p.Name == parameter.Name);
-                if (parameter.Description == null)
-                {
-                    parameter.Description = description.ModelMetadata?.Description;
-                }
+                parameter.Description ??= description.ModelMetadata?.Description;
+
                 parameter.Required |= description.IsRequired;
             }
         }
