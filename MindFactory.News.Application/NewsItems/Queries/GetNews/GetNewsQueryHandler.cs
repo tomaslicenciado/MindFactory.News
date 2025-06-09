@@ -6,6 +6,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using MindFactory.News.Application.Interfaces;
 using MindFactory.News.Domain.Entities;
+using NpgsqlTypes;
 
 namespace MindFactory.News.Application.NewsItems.Queries.GetNews
 {
@@ -44,8 +45,9 @@ namespace MindFactory.News.Application.NewsItems.Queries.GetNews
                 query = query.Where(x => x.PublishDate == request.PublishDate.Value);
 
             if (request.TitleOrAuthor != null)
-                query = query.Where(x => StringContains(x.Title, request.TitleOrAuthor) || 
-                    StringContains(x.Author.Name, request.TitleOrAuthor));
+                query = query.Where(x =>
+                        EF.Functions.ToTsVector("spanish", EF.Property<string>(x, "Title") + " " + x.Author.Name)
+                            .Matches(EF.Functions.PlainToTsQuery("spanish", request.TitleOrAuthor)));
 
             return Result.Success(query);
         }
