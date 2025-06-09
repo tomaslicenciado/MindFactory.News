@@ -37,7 +37,7 @@ namespace MindFactory.News.Application.Authors.Commands.DeleteAuthor
         private async Task<Result<Author>> GetAuthor(DeleteAuthorCommand request, CancellationToken cancellationToken)
         {
             var author = await _context.Authors
-                .SingleOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
+                .SingleOrDefaultAsync(x => x.Id == request.Id && x.Enabled, cancellationToken);
 
             if (author == null)
             {
